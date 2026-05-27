@@ -10,12 +10,17 @@ import {
 } from './i18n.js';
 
 const CHECKLIST_STORAGE_KEY = 'tpm-checklist-v1';
+const COMPETENCY_VIEW_KEY = 'tpm-competency-view';
 
 /** @type {'pl' | 'en'} */
 let currentLocale = getStoredLocale();
 /** @type {ReturnType<typeof getLocaleBundle>} */
 let bundle = getLocaleBundle(currentLocale);
 let activePhase = 1;
+/** @type {'heatmap' | 'table'} */
+let competencyView = 'heatmap';
+
+const ROLE_IDS = ['OP', 'LZ', 'UR', 'SP', 'TPM', 'SPON'];
 
 function t() {
   return bundle.ui;
@@ -32,6 +37,145 @@ function levelBadge(level) {
   }
   const cls = level.toLowerCase();
   return `<span class="level-badge ${cls}">${level}</span>`;
+}
+
+/** @param {string} level @param {string} skill @param {string} roleLabel @param {object} card */
+function levelCell(level, skill, roleLabel, card) {
+  const cls = !level || level === '—' ? 'na' : level.toLowerCase();
+  const label = level === '—' ? '—' : level;
+  const title = `${skill} · ${roleLabel}: ${card?.title ?? label} — ${card?.desc ?? ''}`;
+  return `
+    <div class="heat-cell heat-${cls}" role="gridcell" title="${escapeAttr(title)}" aria-label="${escapeAttr(title)}">
+      <span class="heat-cell-level">${label === '—' ? '·' : label}</span>
+    </div>`;
+}
+
+function escapeAttr(str) {
+  return str.replace(/"/g, '&quot;');
+}
+
+function getLevelCard(level, ui) {
+  return ui.levelCards.find((c) => c.level === level);
+}
+
+function renderCompetencyLegend() {
+  const ui = t().competencies;
+  const panel = document.getElementById('competency-legend-panel');
+  if (!panel) return;
+
+  const levelCards = ui.levelCards
+    .map(
+      (card) => `
+    <article class="legend-level-card legend-level-card--${card.level.toLowerCase()}">
+      <div class="legend-level-card-head">
+        <span class="level-badge ${card.level.toLowerCase()}">${card.level}</span>
+        <strong>${card.title}</strong>
+      </div>
+      <p>${card.desc}</p>
+      <p class="legend-example">${card.example}</p>
+    </article>`
+    )
+    .join('');
+
+  const intensityBar = `
+    <div class="intensity-bar" aria-hidden="true">
+      <span class="intensity-seg l1" title="L1"></span>
+      <span class="intensity-seg l2" title="L2"></span>
+      <span class="intensity-seg l3" title="L3"></span>
+    </div>
+    <div class="intensity-labels">
+      <span>${ui.intensityL1}</span>
+      <span>${ui.intensityL2}</span>
+      <span>${ui.intensityL3}</span>
+    </div>`;
+
+  panel.innerHTML = `
+    <h2 id="competency-legend-heading">${ui.howToReadTitle}</h2>
+    <p class="legend-intro">${ui.howToReadIntro}</p>
+
+    <div class="legend-section">
+      <h3>${ui.levelsTitle}</h3>
+      <div class="legend-level-cards">${levelCards}</div>
+    </div>
+
+    <div class="legend-two-col">
+      <div class="legend-section">
+        <h3>${ui.intensityTitle}</h3>
+        ${intensityBar}
+      </div>
+      <div class="legend-section">
+        <h3>${ui.rolesTitle}</h3>
+        <p class="roles-intro">${ui.rolesIntro}</p>
+      </div>
+    </div>
+
+    <div class="legend-na-block">
+      <span class="heat-cell heat-na heat-cell--mini" aria-hidden="true"><span class="heat-cell-level">·</span></span>
+      <div>
+        <strong>${ui.naTitle}</strong>
+        <p>${ui.naDesc}</p>
+      </div>
+    </div>`;
+}
+
+function renderHeatmapDomain(domain, skills, roleLabels, ui) {
+  const icon = ui.domainIcons[domain.id] ?? '◆';
+  const cols = ROLE_IDS.length;
+  const headerCells = ROLE_IDS.map(
+    (id) => `<div class="heat-col-head" title="${roleLabels[id]}"><span class="heat-role-code">${id}</span></div>`
+  ).join('');
+
+  const rows = skills
+    .map((skill) => {
+      const cells = ROLE_IDS.map((id) => {
+        const lvl = skill.levels[id];
+        const card = lvl && lvl !== '—' ? getLevelCard(lvl, ui) : null;
+        return levelCell(lvl, skill.name, roleLabels[id], card);
+      }).join('');
+      return `
+      <div class="heat-row-label" title="${escapeAttr(skill.name)}">${skill.name}</div>
+      ${cells}`;
+    })
+    .join('');
+
+  return `
+    <div class="domain-block domain-block--visual" data-domain="${domain.id}">
+      <div class="domain-header domain-header--visual">
+        <span class="domain-icon" aria-hidden="true">${icon}</span>
+        <span>${domain.name}</span>
+        <span class="domain-skill-count">${skills.length}</span>
+      </div>
+      <div class="heat-grid" role="grid" style="--heat-cols: ${cols}">
+        <div class="heat-corner" role="columnheader">${ui.colSkill}</div>
+        ${headerCells}
+        ${rows}
+      </div>
+    </div>`;
+}
+
+function renderTableDomain(domain, skills, roleLabels, ui) {
+  const icon = ui.domainIcons[domain.id] ?? '◆';
+  const headerCells = ROLE_IDS.map((id) => `<th>${roleLabels[id]}</th>`).join('');
+  const rows = skills
+    .map((skill) => {
+      const cells = ROLE_IDS.map((id) => `<td>${levelBadge(skill.levels[id])}</td>`).join('');
+      return `<tr><td>${skill.name}</td>${cells}</tr>`;
+    })
+    .join('');
+
+  return `
+    <div class="domain-block" data-domain="${domain.id}">
+      <div class="domain-header">
+        <span class="domain-icon" aria-hidden="true">${icon}</span>
+        ${domain.name}
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>${ui.colSkill}</th>${headerCells}</tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>`;
 }
 
 function renderList(id, items) {
@@ -121,11 +265,10 @@ function applyUiStatic() {
   }
   setText('#filter-domain-label', c.filterDomain);
   setText('#filter-role-label', c.filterRole);
-  setText('#legend-title', c.legendTitle);
-  setText('#legend-l1', c.legendL1);
-  setText('#legend-l2', c.legendL2);
-  setText('#legend-l3', c.legendL3);
-  setText('#legend-na', c.legendNa);
+  setText('#view-toggle-label', c.viewLabel);
+  setText('#view-heatmap', c.viewHeatmap);
+  setText('#view-table', c.viewTable);
+  setText('#competency-hint', c.heatmapHint);
 
   const p = ui.plan;
   setText('#plan-title', p.title);
@@ -226,6 +369,8 @@ function renderCompetencies(filterDomain = 'all', filterRole = 'all') {
   const roleSelect = document.getElementById('role-filter');
   const roleLabels = data().roleLabels;
 
+  renderCompetencyLegend();
+
   const prevDomain = domainSelect.value || 'all';
   const prevRole = roleSelect.value || 'all';
   if (filterDomain === 'all' && prevDomain !== 'all') filterDomain = prevDomain;
@@ -250,10 +395,12 @@ function renderCompetencies(filterDomain = 'all', filterRole = 'all') {
   domainSelect.value = filterDomain;
   roleSelect.value = filterRole;
 
-  const roleIds = Object.keys(roleLabels);
   const filtered = data().competencyDomains.filter(
     (d) => filterDomain === 'all' || d.id === filterDomain
   );
+
+  const renderDomain =
+    competencyView === 'heatmap' ? renderHeatmapDomain : renderTableDomain;
 
   document.getElementById('competency-domains').innerHTML = filtered
     .map((domain) => {
@@ -263,27 +410,17 @@ function renderCompetencies(filterDomain = 'all', filterRole = 'all') {
         return lvl && lvl !== '—';
       });
       if (skills.length === 0) return '';
-
-      const headerCells = roleIds.map((id) => `<th>${roleLabels[id]}</th>`).join('');
-      const rows = skills
-        .map((skill) => {
-          const cells = roleIds.map((id) => `<td>${levelBadge(skill.levels[id])}</td>`).join('');
-          return `<tr><td>${skill.name}</td>${cells}</tr>`;
-        })
-        .join('');
-
-      return `
-      <div class="domain-block" data-domain="${domain.id}">
-        <div class="domain-header">${domain.name}</div>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead><tr><th>${ui.colSkill}</th>${headerCells}</tr></thead>
-            <tbody>${rows}</tbody>
-          </table>
-        </div>
-      </div>`;
+      return renderDomain(domain, skills, roleLabels, ui);
     })
     .join('');
+
+  document.querySelectorAll('.view-btn').forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.view === competencyView);
+  });
+  document.getElementById('competency-domains')?.classList.toggle(
+    'competency-domains--table',
+    competencyView === 'table'
+  );
 }
 
 function renderPhase(phaseId) {
@@ -534,6 +671,23 @@ function initLangToggle() {
   document.getElementById('lang-toggle')?.addEventListener('click', switchLocale);
 }
 
+function initViewToggle() {
+  try {
+    const stored = localStorage.getItem(COMPETENCY_VIEW_KEY);
+    if (stored === 'heatmap' || stored === 'table') competencyView = stored;
+  } catch {
+    /* ignore */
+  }
+
+  document.querySelectorAll('.view-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      competencyView = btn.dataset.view === 'table' ? 'table' : 'heatmap';
+      localStorage.setItem(COMPETENCY_VIEW_KEY, competencyView);
+      renderCompetencies();
+    });
+  });
+}
+
 function init() {
   currentLocale = getStoredLocale();
   bundle = getLocaleBundle(currentLocale);
@@ -542,6 +696,7 @@ function init() {
   initFilters();
   initMobileNav();
   initLangToggle();
+  initViewToggle();
   try {
     renderAll();
   } catch (err) {

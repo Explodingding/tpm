@@ -133,28 +133,28 @@
         <p id="competencies-subtitle">Poziomy:</p>
       </header>
 
-      <div class="filter-bar">
-        <label for="domain-filter" id="filter-domain-label">Domena:</label>
-        <select id="domain-filter">
-          <option value="all">Wszystkie</option>
-        </select>
-        <label for="role-filter" id="filter-role-label">Rola:</label>
-        <select id="role-filter">
-          <option value="all">Wszystkie</option>
-        </select>
+      <article class="competency-legend-panel" id="competency-legend-panel" aria-labelledby="competency-legend-heading"></article>
+
+      <div class="competency-toolbar">
+        <div class="filter-bar">
+          <label for="domain-filter" id="filter-domain-label">Domena:</label>
+          <select id="domain-filter">
+            <option value="all">Wszystkie</option>
+          </select>
+          <label for="role-filter" id="filter-role-label">Rola:</label>
+          <select id="role-filter">
+            <option value="all">Wszystkie</option>
+          </select>
+        </div>
+        <div class="view-toggle" role="group" aria-labelledby="view-toggle-label">
+          <span class="view-toggle-label" id="view-toggle-label">Widok:</span>
+          <button type="button" class="view-btn active" data-view="heatmap" id="view-heatmap">Mapa</button>
+          <button type="button" class="view-btn" data-view="table" id="view-table">Tabela</button>
+        </div>
       </div>
 
+      <p class="competency-hint" id="competency-hint"></p>
       <div id="competency-domains"></div>
-
-      <article class="info-panel">
-        <h2 id="legend-title">Legenda poziomów</h2>
-        <div class="legend-grid">
-          <div><span class="level-badge l1">L1</span> <span id="legend-l1"></span></div>
-          <div><span class="level-badge l2">L2</span> <span id="legend-l2"></span></div>
-          <div><span class="level-badge l3">L3</span> <span id="legend-l3"></span></div>
-          <div><span class="level-badge na">—</span> <span id="legend-na"></span></div>
-        </div>
-      </article>
     </section>
 
     <section id="plan" class="page" aria-labelledby="plan-title" hidden>
@@ -221,7 +221,7 @@
   </main>
 
   <footer class="site-footer">
-    <p><span id="footer-line1-prefix">TPM Plan wdrożenia · Wersja</span> <span id="app-version">1.1.1</span></p>
+    <p><span id="footer-line1-prefix">TPM Plan wdrożenia · Wersja</span> <span id="app-version">1.2.0</span></p>
     <p class="footer-note"><span id="footer-line2-prefix">Projekt open-source — rozwijaj dane w</span> <code>js/data/locales/</code></p>
   </footer>
 
