@@ -77,17 +77,20 @@ W Settings → Pages ustaw custom domain i dodaj plik `CNAME` w root repozytoriu
 
 ## Jak edytować treść
 
-Wszystkie dane są w `js/data/content.js`:
+Dane w dwóch językach:
 
-| Eksport | Opis |
-|---------|------|
-| `config` | Wersja, założenia pilota |
-| `roles` | Role zespołu |
-| `competencyDomains` | Mapa kompetencji |
-| `phases` | Plan 90 dni (tygodnie, KPI) |
-| `readinessChecklist` | Pytania checklisty |
+| Plik | Język |
+|------|-------|
+| `js/data/locales/pl.js` | Polski |
+| `js/data/locales/en.js` | English |
 
-Po zmianie wersji zaktualizuj `config.version`.
+Każdy plik zawiera UI (`ui`) i treść merytoryczną (role, kompetencje, plan 90 dni itd.).
+
+Po zmianie wersji zaktualizuj `config.version` w obu plikach locale.
+
+## Języki
+
+Przycisk **English** / **Polski** w nagłówku przełącza całą stronę. Wybór jest zapisywany w `localStorage` (`tpm-locale`).
 
 ## Planowany rozwój
 
