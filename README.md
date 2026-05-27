@@ -64,7 +64,7 @@ git push -u origin main
 4. **Source:** Deploy from branch
 5. **Branch:** `main` / folder `/ (root)`
 6. Zapisz — po ~1–2 min strona będzie pod:
-   `https://TWOJ-USER.github.io/tpm/`
+   [https://explodingding.github.io/tpm/](https://explodingding.github.io/tpm/)
 
 ### Opcja B — strona użytkownika (`username.github.io`)
 
