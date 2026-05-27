@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Plan wdrożenia TPM — mapa kompetencji i harmonogram 90 dni">
+  <title>TPM — Plan wdrożenia</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙</text></svg>">
+</head>
+<body>
+  <a class="skip-link" href="#main">Przejdź do treści</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="#home" class="logo" data-nav="home">
+        <span class="logo-icon" aria-hidden="true">⚙</span>
+        <span class="logo-text">
+          <strong>TPM</strong>
+          <small>Plan wdrożenia</small>
+        </span>
+      </a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Menu nawigacji">
+        <span></span><span></span><span></span>
+      </button>
+      <nav id="site-nav" class="site-nav" aria-label="Główne sekcje">
+        <a href="#home" class="nav-link active" data-nav="home">Start</a>
+        <a href="#roles" class="nav-link" data-nav="roles">Role</a>
+        <a href="#competencies" class="nav-link" data-nav="competencies">Kompetencje</a>
+        <a href="#plan" class="nav-link" data-nav="plan">Plan 90 dni</a>
+        <a href="#kpi" class="nav-link" data-nav="kpi">KPI</a>
+        <a href="#checklist" class="nav-link" data-nav="checklist">Checklist</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="site-main">
+    <!-- HOME -->
+    <section id="home" class="page active" aria-labelledby="home-title">
+      <div class="hero">
+        <p class="eyebrow">Total Productive Maintenance</p>
+        <h1 id="home-title">Mapa kompetencji i plan rozwoju</h1>
+        <p class="lead">
+          Praktyczny przewodnik wdrożenia TPM na linii pilota — model specjalistów
+          z minimum kompetencji u operatorów, retencją wiedzy i mierzalnymi celami na 90 dni.
+        </p>
+        <div class="hero-actions">
+          <a href="#plan" class="btn btn-primary" data-nav="plan">Zobacz plan 90 dni</a>
+          <a href="#competencies" class="btn btn-secondary" data-nav="competencies">Mapa kompetencji</a>
+        </div>
+      </div>
+
+      <div class="card-grid" id="overview-cards"></div>
+
+      <article class="info-panel">
+        <h2>Model T-shaped</h2>
+        <div class="two-col">
+          <div>
+            <h3>Szeroka baza — wszyscy operatorzy</h3>
+            <ul>
+              <li>5S na stanowisku i maszynie</li>
+              <li>Codzienna inspekcja startowa (AM L1)</li>
+              <li>Rozpoznanie anomalii i eskalacja</li>
+              <li>Rejestrowanie postojów</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Głęboka specjalizacja — wybrani eksperci</h3>
+            <ul>
+              <li>Pareto strat i analiza OEE</li>
+              <li>Projekty kobetsu kaizen</li>
+              <li>Planowana konserwacja (PM)</li>
+              <li>OPL, SOP i audyty gemba</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="info-panel assumptions-panel">
+        <h2>Założenia pilota</h2>
+        <dl class="assumptions-list" id="assumptions-list"></dl>
+      </article>
+    </section>
+
+    <!-- ROLES -->
+    <section id="roles" class="page" aria-labelledby="roles-title" hidden>
+      <header class="page-header">
+        <h1 id="roles-title">Role i właścicielstwo</h1>
+        <p>Struktura zespołu pilota z zasadą backupu dla kompetencji L2+.</p>
+      </header>
+      <div class="table-wrap">
+        <table class="data-table" id="roles-table">
+          <thead>
+            <tr>
+              <th>Rola</th>
+              <th>Skrót</th>
+              <th>Liczba</th>
+              <th>Odpowiedzialność</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <article class="info-panel">
+        <h2>Macierz „kto uczy kogo”</h2>
+        <div class="table-wrap">
+          <table class="data-table" id="training-matrix">
+            <thead>
+              <tr>
+                <th>Obszar</th>
+                <th>Trener</th>
+                <th>Backup</th>
+                <th>Odbiorcy</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </article>
+      <article class="info-panel">
+        <h2>Plan szkoleń (orientacyjnie)</h2>
+        <div class="table-wrap">
+          <table class="data-table" id="training-hours">
+            <thead>
+              <tr>
+                <th>Rola</th>
+                <th>Faza 1</th>
+                <th>Faza 2</th>
+                <th>Faza 3</th>
+                <th>Razem</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <!-- COMPETENCIES -->
+    <section id="competencies" class="page" aria-labelledby="competencies-title" hidden>
+      <header class="page-header">
+        <h1 id="competencies-title">Mapa kompetencji</h1>
+        <p>Poziomy: <span class="level-badge l1">L1</span> wykonuje ·
+           <span class="level-badge l2">L2</span> trenuje ·
+           <span class="level-badge l3">L3</span> projektuje i audytuje</p>
+      </header>
+
+      <div class="filter-bar">
+        <label for="domain-filter">Domena:</label>
+        <select id="domain-filter">
+          <option value="all">Wszystkie</option>
+        </select>
+        <label for="role-filter">Rola:</label>
+        <select id="role-filter">
+          <option value="all">Wszystkie</option>
+        </select>
+      </div>
+
+      <div id="competency-domains"></div>
+
+      <article class="info-panel">
+        <h2>Legenda poziomów</h2>
+        <div class="legend-grid">
+          <div><span class="level-badge l1">L1</span> Wykonuje według instrukcji / checklisty</div>
+          <div><span class="level-badge l2">L2</span> Trenuje innych, poprawia i utrzymuje standard</div>
+          <div><span class="level-badge l3">L3</span> Projektuje proces, audytuje, rozwiązuje problemy chroniczne</div>
+          <div><span class="level-badge na">—</span> Nie wymagane na tym etapie</div>
+        </div>
+      </article>
+    </section>
+
+    <!-- PLAN -->
+    <section id="plan" class="page" aria-labelledby="plan-title" hidden>
+      <header class="page-header">
+        <h1 id="plan-title">Plan rozwoju — 90 dni</h1>
+        <p>Trzy fazy po ~30 dni. Kliknij tydzień, aby zobaczyć szczegóły.</p>
+      </header>
+
+      <div class="phase-tabs" role="tablist" aria-label="Fazy wdrożenia">
+        <button role="tab" class="phase-tab active" data-phase="1" aria-selected="true">Faza 1 · D1–30</button>
+        <button role="tab" class="phase-tab" data-phase="2" aria-selected="false">Faza 2 · D31–60</button>
+        <button role="tab" class="phase-tab" data-phase="3" aria-selected="false">Faza 3 · D61–90</button>
+      </div>
+
+      <div id="phase-summary" class="phase-summary"></div>
+      <div id="timeline" class="timeline"></div>
+
+      <article class="info-panel">
+        <h2>Retencja wiedzy — artefakty obowiązkowe</h2>
+        <div class="table-wrap">
+          <table class="data-table" id="artifacts-table">
+            <thead>
+              <tr>
+                <th>Artefakt</th>
+                <th>Termin</th>
+                <th>Właściciel</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <!-- KPI -->
+    <section id="kpi" class="page" aria-labelledby="kpi-title" hidden>
+      <header class="page-header">
+        <h1 id="kpi-title">KPI i cele</h1>
+        <p>Metryki sukcesu dla każdej fazy pilota. W przyszłości: integracja z danymi produkcyjnymi.</p>
+      </header>
+      <div id="kpi-phases"></div>
+      <article class="info-panel roadmap-panel">
+        <h2>Planowany rozwój (v2+)</h2>
+        <ul class="roadmap-list">
+          <li><span class="tag tag-future">v1.1</span> Edycja baseline OEE i danych pilota w localStorage</li>
+          <li><span class="tag tag-future">v1.2</span> Macierz indywidualna pracowników (eksport CSV)</li>
+          <li><span class="tag tag-future">v2.0</span> Śledzenie postępu tygodni i checklist audytowych</li>
+          <li><span class="tag tag-future">v2.1</span> Wielojęzyczność (PL / EN)</li>
+          <li><span class="tag tag-future">v3.0</span> Panel wielu linii / zakładów</li>
+        </ul>
+      </article>
+    </section>
+
+    <!-- CHECKLIST -->
+    <section id="checklist" class="page" aria-labelledby="checklist-title" hidden>
+      <header class="page-header">
+        <h1 id="checklist-title">Checklist gotowości po 90 dniach</h1>
+        <p>Oceń pilot przed skalowaniem na kolejne linie. Postęp zapisywany lokalnie w przeglądarce.</p>
+      </header>
+
+      <div class="checklist-progress">
+        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="progress-fill" id="checklist-progress-fill"></div>
+        </div>
+        <p id="checklist-progress-text">0 / 0 ukończonych</p>
+      </div>
+
+      <ul class="checklist" id="readiness-checklist"></ul>
+
+      <div class="checklist-result" id="checklist-result" hidden></div>
+
+      <button type="button" class="btn btn-secondary" id="reset-checklist">Resetuj checklist</button>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>TPM Plan wdrożenia · Wersja <span id="app-version">1.0.0</span></p>
+    <p class="footer-note">Projekt open-source — rozwijaj dane w <code>js/data/</code></p>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
