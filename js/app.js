@@ -480,6 +480,13 @@ function navigateTo(pageId) {
   document.querySelector('.nav-toggle')?.setAttribute('aria-expanded', 'false');
 }
 
+const PAGE_IDS = ['home', 'roles', 'competencies', 'plan', 'kpi', 'checklist'];
+
+function resolvePageId(hash) {
+  const page = hash.replace(/^#/, '') || 'home';
+  return PAGE_IDS.includes(page) ? page : 'home';
+}
+
 function initNavigation() {
   document.querySelectorAll('[data-nav]').forEach((el) => {
     el.addEventListener('click', (e) => {
@@ -489,13 +496,14 @@ function initNavigation() {
   });
 
   window.addEventListener('popstate', (e) => {
-    const page = e.state?.page || location.hash.slice(1) || 'home';
-    navigateTo(page);
+    navigateTo(resolvePageId(e.state?.page ? `#${e.state.page}` : location.hash));
   });
 
-  const initial = location.hash.slice(1) || 'home';
-  const valid = ['home', 'roles', 'competencies', 'plan', 'kpi', 'checklist'];
-  navigateTo(valid.includes(initial) ? initial : 'home');
+  window.addEventListener('hashchange', () => {
+    navigateTo(resolvePageId(location.hash));
+  });
+
+  navigateTo(resolvePageId(location.hash));
 }
 
 function initPhaseTabs() {
@@ -529,12 +537,16 @@ function initLangToggle() {
 function init() {
   currentLocale = getStoredLocale();
   bundle = getLocaleBundle(currentLocale);
-  renderAll();
   initNavigation();
   initPhaseTabs();
   initFilters();
   initMobileNav();
   initLangToggle();
+  try {
+    renderAll();
+  } catch (err) {
+    console.error('[TPM] Render failed:', err);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', init);

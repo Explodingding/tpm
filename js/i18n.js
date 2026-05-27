@@ -1,5 +1,5 @@
-import pl from './locales/pl.js';
-import en from './locales/en.js';
+import pl from './data/locales/pl.js';
+import en from './data/locales/en.js';
 
 export const LOCALES = { pl, en };
 export const DEFAULT_LOCALE = 'pl';

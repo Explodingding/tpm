@@ -123,7 +123,7 @@ export default {
     },
   },
   config: {
-    version: '1.1.0',
+    version: '1.1.1',
     pilot: {
       scope: '1 linia / 1 strefa produkcyjna',
       duration: '90 dni',
